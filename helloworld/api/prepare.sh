@@ -1,0 +1,3 @@
+protoc --go-grpc_out=. --grpc-gateway_out=logtostderr=true:. --go_out=. --swagger_out=logtostderr=true:. ./protos/*.proto
+
+go-bindata --nocompress -pkg swagger -o swagger/datafile.go third_party/swagger-ui/...
