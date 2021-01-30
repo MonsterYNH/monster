@@ -1,0 +1,1 @@
+sed -i "s|https://petstore.swagger.io/v2/swagger.json|${SWAGGER_JSON}|" /usr/share/nginx/html/swagger-ui/index.html

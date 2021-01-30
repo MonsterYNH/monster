@@ -1,0 +1,54 @@
+version: '3'
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: gateway
+    image: runnermonster/gateway:latest
+    restart: always
+    volumes:
+      - ./docker/gateway/conf:/etc/nginx/conf.d
+    environment:
+      SWAGGER_JSON: http://monster.ynh/json/helloworld.swagger.json
+    ports:
+      - 80:80
+    networks:
+      monster:
+        ipv4_address: 172.19.0.2
+  etcd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: etcd
+    image: runnermonster/etcd:latest
+    restart: always
+    environment:
+      ETCD_UNSUPPORTED_ARCH: arm64
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+      ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
+    entrypoint: etcd
+    networks:
+      monster:
+        ipv4_address: 172.19.0.3
+  helloworld_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: helloworld
+    image: runnermonster/helloworld_api:latest
+    restart: always
+    entrypoint: /app/payload
+    ports:
+      - 1234:1234
+    networks:
+      monster:
+        ipv4_address: 172.19.0.4
+networks:
+  monster:
+    name: monster
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+          gateway: 172.19.0.1
+  
