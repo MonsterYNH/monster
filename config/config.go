@@ -1,35 +1,47 @@
 package config
 
 import (
-	"net/url"
+	"fmt"
 
 	"github.com/spf13/cobra"
 )
 
 var (
-	// HTTPEndpoint api endpoint
-	HTTPEndpoint = "0.0.0.0:1234"
-	// GRPCEndpoint api endpoint
-	GRPCEndpoint = "0.0.0.0:1235"
-	configURI    *url.URL
-	loggerURI    *url.URL
-	rootCmd      *cobra.Command
+	rootCmd *cobra.Command
+
+	configs = map[string]*Config{
+		"helloworld_http": {
+			ConfigURI: "/config.yaml",
+			LoggerURI: "/log",
+			Endpoint:  "0.0.0.0:1235",
+			SubServeInfos: map[string]string{
+				"helloworld_grpc": "0.0.0.0:1234",
+			},
+		},
+		"helloworld_grpc": {
+			ConfigURI: "/config.yaml",
+			LoggerURI: "/log",
+			Endpoint:  "0.0.0.0:1234",
+		},
+	}
 )
 
-// SetConfigURI set configURI
-func SetConfigURI(uri string) error {
-	var err error
-	configURI, err = url.Parse(uri)
-	return err
+// Config serve starup config
+type Config struct {
+	ConfigURI     string
+	LoggerURI     string
+	Endpoint      string
+	SubServeInfos map[string]string
+	Disable       bool
+	ServeType     string
+	Ext           map[string]string
 }
 
-// SetLoggerURI set loggerURI
-func SetLoggerURI(uri string) error {
-	var err error
-	loggerURI, err = url.Parse(uri)
-	return err
-}
-
-func init() {
-
+// GetConfigEntry get serve start up config
+func GetConfigEntry(name string) (*Config, error) {
+	config, exist := configs[name]
+	if !exist {
+		return nil, fmt.Errorf("can not serve config, named: %s", name)
+	}
+	return config, nil
 }
