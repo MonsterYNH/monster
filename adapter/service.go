@@ -41,7 +41,7 @@ func NewService() *ServiceAdapterPool {
 	}
 }
 
-// Register register a service
+// Serve register a service
 func (adapter *ServiceAdapterPool) Serve(services ...ServiceAdapter) error {
 	adapter.lock.Lock()
 	defer adapter.lock.Unlock()
