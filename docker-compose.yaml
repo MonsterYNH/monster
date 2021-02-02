@@ -11,6 +11,8 @@ services:
       - ./docker/gateway/conf:/etc/nginx/conf.d
     environment:
       SWAGGER_JSON: http://monster.ynh/json/helloworld.swagger.json
+    depends_on: 
+      - helloworld_api
     ports:
       - 80:80
     networks:
@@ -22,6 +24,7 @@ services:
       dockerfile: Dockerfile
       target: etcd
     image: runnermonster/etcd:latest
+    user: bsafe:bsafe
     restart: always
     environment:
       ETCD_UNSUPPORTED_ARCH: arm64
@@ -37,6 +40,7 @@ services:
       dockerfile: Dockerfile
       target: helloworld
     image: runnermonster/helloworld_api:latest
+    user: bsafe:bsafe
     restart: always
     entrypoint: /app/payload
     ports:

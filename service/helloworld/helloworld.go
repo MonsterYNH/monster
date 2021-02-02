@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"monster/config"
-	"monster/gencode/helloworld_api"
+	"monster/grpc_protos/gencode/helloworld_api"
 	"net"
 	"net/http"
 
